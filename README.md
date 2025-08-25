@@ -124,6 +124,7 @@ if __name__ == '__main__':
 client.py
 
 <img width="807" height="438" alt="image" src="https://github.com/user-attachments/assets/a4e3db40-e50d-44f5-a60f-6e2b5dc77ba4" />
+
 server.py
 
 <img width="808" height="522" alt="image" src="https://github.com/user-attachments/assets/14b949d8-39ad-47ea-9adf-70d26c7bee4d" />

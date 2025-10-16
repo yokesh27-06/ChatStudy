@@ -1,137 +1,63 @@
-# Ex. No:1b 			Study of Client Server Chat Applications
+# Ex.No:1b  			IMPLEMENTATION OF SLIDING WINDOW PROTOCOL
+## NAME: YOKESH H
+## REG NO : 212224230312
+
 
 ## Aim: 
-To perform a study on Client Server Chat Applications
-## Introduction:
-Client-server chat applications are a category of networked software that enables real-time communication between users over a network. This study explores the key components, architecture, and considerations in the development of client-server chat applications, highlighting their significance and common implementation practices.
-Client-server chat applications are software systems that enable real-time communication between users over a network. These applications follow a client-server model, where one component (the server) manages connections and facilitates communication, while the other component (the client) interacts with the server to send and receive messages. Below are the fundamental aspects and components involved in the basics of client-server chat applications:
-## 1. Client-Server Model:
-•	Server:
-•	The server is a central component that listens for incoming connections from clients.
-•	It manages the communication channels and facilitates the exchange of messages between clients.
-•	It may handle user authentication, message routing, and other core functionalities.
-•	Client:
-•	Clients are users or devices that connect to the server to participate in the chat.
-•	Each client has a unique identity, often represented by a username.
-•	Clients interact with the server to send and receive messages.
-## 2. Communication Protocols:
-•	Communication between clients and servers often relies on established protocols. The choice of protocol influences the behavior of the chat application.
-•	TCP (Transmission Control Protocol):
-•	Provides reliable, connection-oriented communication.
-•	Ensures the ordered and error-free exchange of messages.
+To write a python program to perform sliding window protocol
+## ALGORITHM:
+ALGORITHM:
+1. Start the program.
+2. Get the frame size from the user
+3. To create the frame based on the user request.
+4. To send frames to server from the client side.
+5. If your frames reach the server it will send ACK signal to client
+otherwise it will sendNACK signal to client.
+6. Stop the program
+PROGRAM:
 
-•	UDP (User Datagram Protocol):
-•	Connectionless and operates in a best-effort mode.
-•	Faster but may result in message loss or disorder.
-## 3. Socket Programming:
-•	Sockets:
+SERVER
 
-•	Sockets serve as communication endpoints.
-•	Each client and the server has a socket for sending and receiving data.
-
-•	Functions:
-•	Socket programming involves functions for creating, binding, listening, accepting connections, and sending/receiving data through sockets.
-## 4. User Authentication:
-•	For security and privacy, chat applications often implement user authentication mechanisms.
-•	Users are required to provide credentials (e.g., username and password) to access the chat system.
-•	More advanced methods like tokens or secure protocols can enhance authentication.
-5. Message Routing:
-•	The server is responsible for routing messages from one client to another.
-•	It ensures that messages are delivered to the intended recipients.
-•	Message routing may involve maintaining a list of connected users and their associated sockets.
-
-## Architecture:
-## Client-Server Model:
-Client-server chat applications typically follow the client-server model, where one entity acts as the server, managing connections and facilitating communication, and one or more entities act as clients, initiating communication with the server.
-
-## Communication Protocols:
-The choice of communication protocol is crucial. Many chat applications use TCP (Transmission Control Protocol) for reliable, connection-oriented communication to ensure the ordered and error-free exchange of messages.
-User Authentication:
-User authentication mechanisms are essential to ensure secure and authorized access to the chat system. This can involve username-password authentication or more advanced methods like tokens.
-## Components of Client-Server Chat Applications:
-## Server-Side Components:
-
-•	Socket Handling: The server manages incoming client connections using sockets, creating a separate thread or process for each connected client.
-•	User Management: Maintaining information about connected users, their status, and handling login/logout functionality.
-•	Message Routing: Implementing logic to route messages from one client to another, ensuring proper delivery.
-
-## Considerations in Development:
-1.	Concurrency and Multithreading:
-•	Chat applications often require handling multiple connections simultaneously. The server must be designed to support concurrency, commonly achieved through multithreading or asynchronous programming.
-2.	Security:
-•	Ensuring the security of user data and messages is paramount. Encryption techniques, such as SSL/TLS, can be implemented to secure data in transit. Proper user authentication mechanisms help prevent unauthorized access.
-3.	Scalability:
-•	As the number of users grows, the chat application must be scalable. This involves optimizing server-side architecture to handle increasing loads efficiently.
-4.	Persistence:
-•	Some chat applications implement message persistence, allowing users to retrieve past messages. This may involve using databases to store and retrieve chat history.
-
-5.	Notification Systems:
-•	Implementing real-time notifications to inform users of new messages, user presence changes, or other relevant events.
-
-
-Client-server chat applications are versatile tools that facilitate real-time communication between users over a network. They incorporate various components, including server-side and client-side elements, and must consider factors such as security, scalability, and concurrency. As technology continues to advance, client-server chat applications remain integral for collaborative communication in various domains.
-
-Client-server chat applications are foundational to real-time communication over networks. They incorporate principles of socket programming, communication protocols, and security mechanisms to provide a seamless user experience. Understanding the basics of client-server chat applications is essential for developers involved in networked application development, as they form the backbone of various collaborative communication systems. As technology evolves, chat applications continue to adapt, incorporating new features and technologies to enhance user interaction and connectivity.
-## PROGRAM:
-## CLIENT:
 import socket
+s=socket.socket()
+s.connect(('localhost',8000))
+while True: 
+ print(s.recv(1024).decode())
+ s.send("acknowledgement recived from the server".encode())
 
-def client_program():
-    host = "127.0.0.1"   #
-    port = 5000
+CLIENT
 
-    client_socket = socket.socket()
-    client_socket.connect((host, port))
-
-    message = input(" -> ")
-
-    while message.lower().strip() != 'bye':
-        client_socket.send(message.encode())
-        data = client_socket.recv(1024).decode()
-        print('Received from server: ' + data)
-        message = input(" -> ")
-
-    client_socket.close()
-
-if __name__ == '__main__':
-    client_program()
-## SERVER:
 import socket
+s=socket.socket()
+s.bind(('localhost',8000))
+s.listen(5)
+c,addr=s.accept()
+size=int(input("Enter number of frames to send : "))
+l=list(range(size))
+s=int(input("Enter Window Size : "))
+st=0
+i=0
+while True:
+ while(i<len(l)):
+ st+=s
+ c.send(str(l[i:st]).encode())
+ ack=c.recv(1024).decode()
+ if ack:
+ print(ack)
+ i+=s
 
-def server_program():
-    host = "127.0.0.1"   # localhost (works better on Windows)
-    port = 5000
-
-    server_socket = socket.socket()
-    server_socket.bind((host, port))
-
-    server_socket.listen(2)
-    conn, address = server_socket.accept()
-    print("Connection from: " + str(address))
-    while True:
-        data = conn.recv(1024).decode()
-        if not data:
-            break
-        print("From connected user: " + str(data))
-        data = input(' -> ')
-        conn.send(data.encode())
-
-    conn.close()
-
-if __name__ == '__main__':
-    server_program()
 ## OUTPUT:
-client.py
 
-<img width="807" height="438" alt="image" src="https://github.com/user-attachments/assets/a4e3db40-e50d-44f5-a60f-6e2b5dc77ba4" />
-
-server.py
-
-<img width="808" height="522" alt="image" src="https://github.com/user-attachments/assets/14b949d8-39ad-47ea-9adf-70d26c7bee4d" />
+## server.py
+<img width="404" height="283" alt="image" src="https://github.com/user-attachments/assets/b21eaab4-2d58-471f-8bd2-bcd3e84f0fba" />
 
 
 
+## client.py
+
+<img width="788" height="630" alt="image" src="https://github.com/user-attachments/assets/a821851b-83a9-44e0-a55a-530871ef4b92" />
+
+
+ 
 ## Result:
-
-Thus the study on Client Server Chat Applications has been performed
-
+Thus the study of Socket Programming Completed Successfully

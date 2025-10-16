@@ -17,16 +17,16 @@ otherwise it will sendNACK signal to client.
 PROGRAM:
 
 SERVER
-
+```
 import socket
 s=socket.socket()
 s.connect(('localhost',8000))
 while True: 
  print(s.recv(1024).decode())
  s.send("acknowledgement recived from the server".encode())
-
+```
 CLIENT
-
+```
 import socket
 s=socket.socket()
 s.bind(('localhost',8000))
@@ -45,7 +45,7 @@ while True:
  if ack:
  print(ack)
  i+=s
-
+```
 ## OUTPUT:
 
 ## server.py
